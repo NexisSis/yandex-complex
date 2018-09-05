@@ -8,5 +8,7 @@ export function loadList() {
 
 export function loadDetails(id) 
 {
-  return fetch(`/api/stations/${id}`).then(response => response.json());
+  return fetch(`/api/stations/${id}`).then(response => {
+    response.json();
+  });
 }

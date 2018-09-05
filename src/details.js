@@ -22,7 +22,7 @@ export function getDetailsContentLayout(ymaps) {
             </div>
         {% else %}
             <div class="details-info">
-                Идет загрузка данных...
+                Loading...
             </div>
         {% endif %}
     `,
