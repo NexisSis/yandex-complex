@@ -42,12 +42,10 @@ export function getDetailsContentLayout(ymaps) {
           );
         }
       },
-
       clear: () => {
         if (this.connectionChart) {
           this.connectionChart.destroy();
         }
-
         BalloonContentLayout.superclass.clear.call(this);
       }
     }
