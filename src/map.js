@@ -12,12 +12,12 @@ export function initMap(ymaps, containerId) {
 
 
   const objectManager = new ymaps.ObjectManager({
-    clusterize: false,
+    clusterize: true,
     gridSize: 64,
     clusterIconLayout: 'default#pieChart',
     clusterDisableClickZoom: false,
-    geoObjectOpenBalloonOnClick: false,
-    geoObjectHideIconOnBalloonOpen: false,
+    geoObjectOpenBalloonOnClick: true,
+    geoObjectHideIconOnBalloonOpen: true,
     geoObjectBalloonContentLayout: getDetailsContentLayout(ymaps)
   });
 
@@ -27,6 +27,7 @@ export function initMap(ymaps, containerId) {
   loadList().then(data => {
     objectManager.add(data);
   });
+
   myMap.geoObjects.add(objectManager);
 
 
@@ -34,27 +35,25 @@ export function initMap(ymaps, containerId) {
     objectManager.objects.events.add('click', event => {
       const objectId = event.get('objectId');
       const obj = objectManager.objects.getById(objectId);
-      console.log(obj);
       objectManager.objects.balloon.open(objectId);
-
-
-
-      if (!obj.properties.details) {
-        loadDetails(objectId).then(data => {
-          obj.properties.details = data;
-          objectManager.objects.balloon.setData(obj);
-        });
-      }
+       if (!obj.properties.details) {
+         loadDetails(objectId).then(data => {
+           obj.properties.details = data;
+         //  console.log('test data');
+           //console.log(obj.properties);
+           objectManager.objects.balloon.setData(obj);
+         });
+       }
     });
 
-    // // filters
-    // const listBoxControl = createFilterControl(ymaps);
-    // myMap.controls.add(listBoxControl);
-    //
-    // var filterMonitor = new ymaps.Monitor(listBoxControl.state);
-    // filterMonitor.add('filters', filters => {
-    //   objectManager.setFilter(
-    //     obj => filters[obj.isActive ? 'active' : 'defective']
-    //   );
-    // });
+    // filters
+    const listBoxControl = createFilterControl(ymaps);
+    myMap.controls.add(listBoxControl);
+
+    var filterMonitor = new ymaps.Monitor(listBoxControl.state);
+    filterMonitor.add('filters', filters => {
+      objectManager.setFilter(
+        obj => filters[obj.isActive ? 'active' : 'defective']
+      );
+    });
 }

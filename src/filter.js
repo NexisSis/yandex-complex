@@ -27,6 +27,5 @@ export function createFilterControl(ymaps) {
     filters[item.data.get('value')] = item.isSelected();
     listBoxControl.state.set('filters', filters);
   });
-
   return listBoxControl;
 }

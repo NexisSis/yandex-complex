@@ -16,15 +16,19 @@ function getLabel(el, i, data) {
 }
 
 export function createChart(container, data, isActive) {
-  const ctx = container.getContext('2d');
+      console.log('create chart');
+      const ctx = container.getContext('2d');
+      const borderColor = getColor(isActive);
+      const backgroundColor = getColor(isActive, 0.5);
+      var label = data.map(getLabel).map((tmpLabel)=> {
+          return tmpLabel.split("(")[0];
+      });
 
-  const borderColor = getColor(isActive);
-  const backgroundColor = getColor(isActive, 0.5);
-
-  const chart = new Chart(ctx, {
+  var chart = new Chart(ctx, {
     type: 'line',
+    responsive:true,
     data: {
-      labels: data.map(getLabel),
+      labels: label,
       datasets: [
         {
           data: data,
@@ -35,12 +39,12 @@ export function createChart(container, data, isActive) {
       ]
     },
     options: {
-        legend: { 
+        legend: {
             display: false
         },
         scales: {
             xAxes: [{ ticks: { display: false } }],
-            yAxes: [{ ticks: { beginAtZero: true, max: 0 } }]
+            yAxes: [{ ticks: { beginAtZero: true } }]
         }
     }
   });

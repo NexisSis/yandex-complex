@@ -17,8 +17,8 @@ export function getDetailsContentLayout(ymaps) {
                 </div>
             </div>
             <div class="details-info">
-                <div class="details-label">connections</div>
-                <canvas class="details-chart" width="270" height="100" />
+                <div class="details-label details-label_change">connections</div>             
+                <canvas class="details-chart" style="position: relative;width:270px;height:100px;"/>             
             </div>
         {% else %}
             <div class="details-info">
@@ -27,28 +27,49 @@ export function getDetailsContentLayout(ymaps) {
         {% endif %}
     `,
     {
-      build: () => {
+      build: function(){
         BalloonContentLayout.superclass.build.call(this);
 
-        const { details } = this.getData().object.properties;
-
-        if (details) {
+          const obj  = this.getData().object;
+          console.log(obj)
+        if (obj) {
           const container = this.getElement().querySelector('.details-chart');
-
-          this.connectionChart = createChart(
-            container,
-            details.chart,
-            details.isActive
-          );
+          if(this.connectionChart){
+              console.log('time to destroy');
+              this.connectionChart.destroy();
+          }else{
+              console.log('details chart');
+              if(obj.properties.details && container && obj.isActive){
+                  this.connectionChart = createChart(
+                      container,
+                      obj.properties.details.chart,
+                      obj.isActive
+                  );
+              }else{
+                  console.log('bad chart details');
+                  var label = this.getElement().querySelector('.details-label_change');
+                  if(label){
+                      label.innerHTML='nothing to display';
+                  }
+              }
+          }
+        }else{
+            console.log('details.js file, obj data is undefinded');
         }
       },
+      clear: function(){
+           console.log('clear');
+           console.log(this.connectionChart);
+         if (this.connectionChart) {
+             console.log('clear inside if');
+           this.connectionChart.destroy();
+           console.log(this);
+           console.log('end clear');
 
-      clear: () => {
-        if (this.connectionChart) {
-          this.connectionChart.destroy();
-        }
-
+         }
         BalloonContentLayout.superclass.clear.call(this);
+       // console.log('here2');
+
       }
     }
   );
